@@ -24,6 +24,7 @@ public class BodyMassIndex {
         } else {
             bmiCategory = "underweight";
         }
+        return bmiCategory;
     }
 
     public BodyMassIndex(double heightArg, double weightArg) {
