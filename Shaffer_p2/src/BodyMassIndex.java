@@ -29,6 +29,7 @@ public class BodyMassIndex {
 
     public BodyMassIndex(double heightArg, double weightArg) {
         bmiNumber = calculateBmi(heightArg, weightArg);
+        bmiNumber = Math.round(bmiNumber * 10) / 10.0;
         bmiCategory = calculateBmiCategory(bmiNumber);
     }
 }

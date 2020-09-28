@@ -1,7 +1,7 @@
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-// 7 tests, 4 BMI categories, 2 calculatefunctions, 1 isPositive
+// 6 tests: 4 BMI categories, 2 calculate functions
 public class BodyMassIndexTest {
     @Test
     void testCalculateBmi() {
