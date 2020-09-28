@@ -4,17 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 // 7 tests, 4 BMI categories, 2 calculatefunctions, 1 isPositive
 public class BodyMassIndexTest {
     @Test
-    void testIsInputPositivePositive() {
-        BodyMassIndex bmi = new BodyMassIndex(0, 0);
-        assertEquals(continue, bmi.isInputPositive(15));
-    }
-
-    void testIsInputPositiveNegative() {
-        BodyMassIndex bmi = new BodyMassIndex(0, 0);
-        assertEquals(java.lang.System.exit(0), bmi.isInputPositive(-15));
-    }
-
-    @Test
     void testCalculateBmi() {
         BodyMassIndex bmi = new BodyMassIndex(0, 0);
         assertEquals(27.3, bmi.calculateBmi(60, 140));
