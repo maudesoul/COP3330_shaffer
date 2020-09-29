@@ -45,6 +45,7 @@ public class App {
     }
 
     public static void displayBmiInfo(BodyMassIndex bmiArg) {
+        System.out.println("Underweight < 18.5\nNormal weight = 18.5–24.9\nOverweight = 25–29.9\nObesity >= 30");
         System.out.println("Your BMI is: " + bmiArg.bmiNumber);
         System.out.println("Your BMI category is: " + bmiArg.bmiCategory);
     }
