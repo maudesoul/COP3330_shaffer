@@ -59,6 +59,7 @@ public class App {
             }
         }
         double average = sum / bmiDataArg.size();
+        average = Math.round(average * 10) / 10.0;
         System.out.println("Average BMI: " + average);
     }
 }

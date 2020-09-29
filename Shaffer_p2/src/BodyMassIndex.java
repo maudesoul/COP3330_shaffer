@@ -16,13 +16,13 @@ public class BodyMassIndex {
 
     public String calculateBmiCategory(double bmiNumberArg) {
         if (18.5 <= bmiNumberArg && bmiNumberArg <= 24.9) {
-            bmiCategory = "normal";
+            bmiCategory = "Normal weight";
         } else if (25 <= bmiNumberArg && bmiNumberArg <= 29.9) {
-            bmiCategory = "overweight";
+            bmiCategory = "Overweight";
         } else if (bmiNumberArg >= 30) {
-            bmiCategory = "obese";
+            bmiCategory = "Obesity";
         } else {
-            bmiCategory = "underweight";
+            bmiCategory = "Underweight";
         }
         return bmiCategory;
     }
