@@ -1,7 +1,7 @@
 public class Pyramid extends Shape3D {
     private final double base, height, width;
 
-    public Triangle(double base, double width, double height) {
+    public Pyramid(double base, double width, double height) {
         this.base = base;
         this.width = width;
         this.height = height;
