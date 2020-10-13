@@ -5,10 +5,12 @@ public class Triangle extends Shape2D {
         this.base = base;
         this.height = height;
     }
+
     @Override
     public String getName() {
         return "triangle";
     }
+
     @Override
     public double getArea() {
         double triangleArea;

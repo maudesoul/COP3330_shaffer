@@ -4,11 +4,13 @@ public class Square extends Shape2D {
     public Square(double side) {
         this.side = side;
     }
+
     @Override
     public String getName() {
         return "square";
     }
     @Override
+
     public double getArea() {
         double squareArea;
         squareArea = side * side;           // A = side^2
