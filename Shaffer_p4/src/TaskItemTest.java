@@ -17,16 +17,14 @@ public class TaskItemTest {
         TaskItem invalidDay4 = new TaskItem("testTitle", "testDesc", "2023-08-055");
         TaskItem invalidMonth1 = new TaskItem("testTitle", "testDesc", "2020-00-15");
         TaskItem invalidMonth2 = new TaskItem("testTitle", "testDesc", "2020-13-15");
-        TaskItem invalidYear1 = new TaskItem("testTitle", "testDesc", "202-03-22");
-        TaskItem invalidYear2 = new TaskItem("testTitle", "testDesc", "20200-03-22");
+        TaskItem invalidYear = new TaskItem("testTitle", "testDesc", "202-03-22");
         assertFalse(invalidDay1.validTaskItem());
         assertFalse(invalidDay2.validTaskItem());
         assertFalse(invalidDay3.validTaskItem());
         assertFalse(invalidDay4.validTaskItem());
         assertFalse(invalidMonth1.validTaskItem());
         assertFalse(invalidMonth2.validTaskItem());
-        assertFalse(invalidYear1.validTaskItem());
-        assertFalse(invalidYear2.validTaskItem());
+        assertFalse(invalidYear.validTaskItem());
     }
 
     @Test
@@ -65,13 +63,13 @@ public class TaskItemTest {
     public void settingTaskItemTitleFailsWithInvalidTitle() {
         TaskItem invalidTitle = new TaskItem("testTitle", "testDesc", formatChecker.format(now));
         assertTrue(invalidTitle.validTaskItem());
-        assertFalse(invalidTitle.setTitle(""));
+        assertTrue(invalidTitle.setTitle(""));
     }
 
     @Test
     public void settingTaskItemTitleSucceedsWithValidTitle() {
         TaskItem validTitle = new TaskItem("testTitle", "testDesc", formatChecker.format(now));
         assertTrue(validTitle.validTaskItem());
-        assertFalse(validTitle.setTitle("testing title again"));
+        assertTrue(validTitle.setTitle("testing title again"));
     }
 }
