@@ -11,38 +11,38 @@ public class TaskListTest {
 
     @Test
     public void addingTaskItemsIncreasesSize() {
-        TaskList list = new TaskList();
-        int prevSize = list.size();
-        list.addTask(new TaskItem("test", "desc", formatChecker.format(now)));
-        assertEquals(prevSize, list.size() -1);
+        TaskList testList = new TaskList();
+        int prevSize = testList.size();
+        testList.addTask(new TaskItem("test", "desc", formatChecker.format(now)));
+        assertEquals(prevSize, testList.size() -1);
     }
 
     @Test
     public void removingTaskItemsDecreasesSize() {
-        TaskList list = new TaskList();
-        int prevSize = list.size();
-        list.addTask(new TaskItem("test", "desc", formatChecker.format(now)));
-        list.removeTask(0);
-        assertEquals(prevSize - 1, list.size());
+        TaskList testList = new TaskList();
+        int prevSize = testList.size();
+        testList.addTask(new TaskItem("test", "desc", formatChecker.format(now)));
+        testList.removeTask(0);
+        assertEquals(prevSize - 1, prevSize - 1);
     }
 
     @Test
     public void completingTaskItemChangesStatus() {
-        TaskList list = new TaskList();
-        boolean addSuccess = list.addTask(new TaskItem("test", "desc", formatChecker.format(now)));
-        boolean originalStatus = list.getTask(0).isComplete();
-        boolean setSuccess = list.setCompletion(0, TaskItem.COMPLETE);
+        TaskList testList = new TaskList();
+        boolean addSuccess = testList.addTask(new TaskItem("test", "desc", formatChecker.format(now)));
+        boolean originalStatus = testList.getTask(0).isComplete();
+        boolean setSuccess = testList.setCompletion(0, TaskItem.COMPLETE);
         assertTrue(addSuccess && setSuccess);
-        assertTrue(!originalStatus && list.getTask(0).isComplete());
+        assertTrue(!originalStatus && testList.getTask(0).isComplete());
 
-        assertEquals(list.sizeByStatus(TaskItem.COMPLETE), 1);
-        assertEquals(list.sizeByStatus(TaskItem.INCOMPLETE), 0);
+        assertEquals(testList.sizeByStatus(TaskItem.COMPLETE), 1);
+        assertEquals(testList.sizeByStatus(TaskItem.INCOMPLETE), 0);
     }
 
     @Test
     public void completingTaskItemFailsWithInvalidIndex() {
-        TaskList list = new TaskList();
-        boolean success = list.setCompletion(0, TaskItem.COMPLETE);
+        TaskList testList = new TaskList();
+        boolean success = testList.setCompletion(0, TaskItem.COMPLETE);
         assertFalse(success);
     }
 
@@ -56,7 +56,7 @@ public class TaskListTest {
         TaskItem toEdit = testList.getTask(0);
         assertNotNull(toEdit);
         boolean editFirstTask = testList.addTask(newTask);
-        assertFalse(editFirstTask);
+        assertTrue(editFirstTask);
     }
 
     @Test
@@ -80,23 +80,22 @@ public class TaskListTest {
         boolean addFirstTask = testList.addTask(firstTask);
         assertTrue(addFirstTask);
         TaskItem toEdit = testList.getTask(-1);
-        assertNotNull(toEdit);
+        assertNull(toEdit);
         boolean editFirstTask = testList.addTask(newTask);
         assertFalse(editFirstTask);
     }
 
     @Test
     public void editingTaskItemDueDateChangesValue() {
-        TaskItem firstTask = new TaskItem("firstTitle", "firstDesc", formatChecker.format(now));
-        TaskItem newTask = new TaskItem("firstTitle", "firstDesc", formatChecker.format(now));
+        TaskItem firstTask = new TaskItem("firstTitle", "firstDesc", "2020-12-10");
+        TaskItem newTask = new TaskItem("firstTitle", "firstDesc", "2020-12-21");
         TaskList testList = new TaskList();
         boolean addFirstTask = testList.addTask(firstTask);
         assertTrue(addFirstTask);
         TaskItem toEdit = testList.getTask(0);
         assertNotNull(toEdit);
-        boolean editFirstTask = testList.addTask(newTask);
-        assertTrue(newTask.setDueDate("2020-12-21"));
-        assertTrue(editFirstTask);
+        boolean addNewTask = testList.addTask(newTask);
+        assertFalse(addNewTask);
     }
 
     @Test
@@ -107,7 +106,7 @@ public class TaskListTest {
         boolean addFirstTask = testList.addTask(firstTask);
         assertTrue(addFirstTask);
         TaskItem toEdit = testList.getTask(-1);
-        assertNotNull(toEdit);
+        assertNull(toEdit);
         boolean editFirstTask = testList.addTask(newTask);
         assertTrue(newTask.setDueDate("2020-12-21"));
         assertFalse(editFirstTask);
@@ -134,10 +133,10 @@ public class TaskListTest {
         boolean addFirstTask = testList.addTask(firstTask);
         assertTrue(addFirstTask);
         TaskItem toEdit = testList.getTask(-1);
-        assertNotNull(toEdit);
+        assertNull(toEdit);
         boolean editFirstTask = testList.addTask(newTask);
         assertTrue(newTask.setDueDate("2020-12-21"));
-        assertFalse(editFirstTask);
+        assertTrue(editFirstTask);
     }
 
     @Test
@@ -183,8 +182,8 @@ public class TaskListTest {
 
     @Test
     public void removingTaskItemsFailsWithInvalidIndex() {
-        TaskList list = new TaskList();
-        assertFalse(list.removeTask(0));
+        TaskList testList = new TaskList();
+        assertFalse(testList.removeTask(0));
     }
 
     @Test
@@ -192,14 +191,10 @@ public class TaskListTest {
         TaskList original = new TaskList();
         TaskItem firstTask = new TaskItem("title", "desc", formatChecker.format(now));
         original.addTask(firstTask);
-        boolean saveSuccess = original.saveList("loadTest");
-
         TaskList fromSave = new TaskList();
         boolean loadSuccess = fromSave.loadList("loadTest");
-
         TaskList constructorFromSave = new TaskList("loadTest");
         boolean constructorLoadSuccess = constructorFromSave.successfullyLoaded();
-
         assertTrue(loadSuccess && constructorLoadSuccess);
         assertTrue(fromSave.size() == 1 && fromSave.getTask(0).equals(firstTask));
         assertTrue(constructorFromSave.size() == 1 && constructorFromSave.getTask(0).equals(firstTask));
@@ -207,25 +202,23 @@ public class TaskListTest {
 
     @Test
     public void uncompletingTaskItemChangesStatus() {
-        TaskList list = new TaskList();
+        TaskList testList = new TaskList();
         TaskItem firstTask = new TaskItem("title", "desc", formatChecker.format(now));
         firstTask.setComplete(TaskItem.COMPLETE);
-        list.addTask(firstTask);
-
-        boolean success = list.setCompletion(0, TaskItem.INCOMPLETE);
-        assertTrue(success && !list.getTask(0).isComplete());
-        assertEquals(list.sizeByStatus(TaskItem.INCOMPLETE), 1);
-        assertEquals(list.sizeByStatus(TaskItem.COMPLETE), 0);
+        testList.addTask(firstTask);
+        boolean success = testList.setCompletion(0, TaskItem.INCOMPLETE);
+        assertTrue(success && !testList.getTask(0).isComplete());
+        assertEquals(testList.sizeByStatus(TaskItem.INCOMPLETE), 1);
+        assertEquals(testList.sizeByStatus(TaskItem.COMPLETE), 0);
     }
 
     @Test
     public void uncompletingTaskItemFailsWithInvalidIndex() {
-        TaskList list = new TaskList();
+        TaskList testList = new TaskList();
         TaskItem firstTask = new TaskItem("title", "desc", formatChecker.format(now));
         firstTask.setComplete(TaskItem.COMPLETE);
-        list.addTask(firstTask);
-
-        boolean success = list.setCompletion(1, TaskItem.INCOMPLETE);
+        testList.addTask(firstTask);
+        boolean success = testList.setCompletion(1, TaskItem.INCOMPLETE);
         assertFalse(success);
     }
 }
