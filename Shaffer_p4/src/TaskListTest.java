@@ -48,67 +48,132 @@ public class TaskListTest {
 
     @Test
     public void editingTaskItemChangesValues() {
-
+        TaskItem firstTask = new TaskItem("firstTitle", "firstDesc", formatChecker.format(now));
+        TaskItem newTask = new TaskItem("newTitle", "newDesc", formatChecker.format(now));
+        TaskList testList = new TaskList();
+        boolean addFirstTask = testList.addTask(firstTask);
+        assertTrue(addFirstTask);
+        TaskItem toEdit = testList.getTask(0);
+        assertNotNull(toEdit);
+        boolean editFirstTask = testList.addTask(newTask);
+        assertFalse(editFirstTask);
     }
 
     @Test
     public void editingTaskItemDescriptionChangesValue() {
-
+        TaskItem firstTask = new TaskItem("firstTitle", "firstDesc", formatChecker.format(now));
+        TaskItem newTask = new TaskItem("firstTitle", "newDesc", formatChecker.format(now));
+        TaskList testList = new TaskList();
+        boolean addFirstTask = testList.addTask(firstTask);
+        assertTrue(addFirstTask);
+        TaskItem toEdit = testList.getTask(0);
+        assertNotNull(toEdit);
+        boolean editFirstTask = testList.addTask(newTask);
+        assertFalse(editFirstTask);
     }
 
     @Test
     public void editingTaskItemDescriptionFailsWithInvalidIndex() {
-
+        TaskItem firstTask = new TaskItem("firstTitle", "firstDesc", formatChecker.format(now));
+        TaskItem newTask = new TaskItem("firstTitle", "newDesc", formatChecker.format(now));
+        TaskList testList = new TaskList();
+        boolean addFirstTask = testList.addTask(firstTask);
+        assertTrue(addFirstTask);
+        TaskItem toEdit = testList.getTask(-1);
+        assertNotNull(toEdit);
+        boolean editFirstTask = testList.addTask(newTask);
+        assertFalse(editFirstTask);
     }
 
     @Test
     public void editingTaskItemDueDateChangesValue() {
-
+        TaskItem firstTask = new TaskItem("firstTitle", "firstDesc", formatChecker.format(now));
+        TaskItem newTask = new TaskItem("firstTitle", "firstDesc", formatChecker.format(now));
+        TaskList testList = new TaskList();
+        boolean addFirstTask = testList.addTask(firstTask);
+        assertTrue(addFirstTask);
+        TaskItem toEdit = testList.getTask(0);
+        assertNotNull(toEdit);
+        boolean editFirstTask = testList.addTask(newTask);
+        assertTrue(newTask.setDueDate("2020-12-21"));
+        assertTrue(editFirstTask);
     }
 
     @Test
     public void editingTaskItemDueDateFailsWithInvalidIndex() {
-
+        TaskItem firstTask = new TaskItem("firstTitle", "firstDesc", formatChecker.format(now));
+        TaskItem newTask = new TaskItem("firstTitle", "firstDesc", formatChecker.format(now));
+        TaskList testList = new TaskList();
+        boolean addFirstTask = testList.addTask(firstTask);
+        assertTrue(addFirstTask);
+        TaskItem toEdit = testList.getTask(-1);
+        assertNotNull(toEdit);
+        boolean editFirstTask = testList.addTask(newTask);
+        assertTrue(newTask.setDueDate("2020-12-21"));
+        assertFalse(editFirstTask);
     }
 
     @Test
     public void editingTaskItemTitleChangesValue() {
-
+        TaskItem firstTask = new TaskItem("firstTitle", "firstDesc", formatChecker.format(now));
+        TaskItem newTask = new TaskItem("newTitle", "firstDesc", formatChecker.format(now));
+        TaskList testList = new TaskList();
+        boolean addFirstTask = testList.addTask(firstTask);
+        assertTrue(addFirstTask);
+        TaskItem toEdit = testList.getTask(0);
+        assertNotNull(toEdit);
+        boolean editFirstTask = testList.addTask(newTask);
+        assertTrue(editFirstTask);
     }
 
     @Test
     public void editingTaskItemTitleFailsWithInvalidIndex() {
-
+        TaskItem firstTask = new TaskItem("firstTitle", "firstDesc", formatChecker.format(now));
+        TaskItem newTask = new TaskItem("newTitle", "firstDesc", formatChecker.format(now));
+        TaskList testList = new TaskList();
+        boolean addFirstTask = testList.addTask(firstTask);
+        assertTrue(addFirstTask);
+        TaskItem toEdit = testList.getTask(-1);
+        assertNotNull(toEdit);
+        boolean editFirstTask = testList.addTask(newTask);
+        assertTrue(newTask.setDueDate("2020-12-21"));
+        assertFalse(editFirstTask);
     }
 
     @Test
     public void gettingTaskItemDescriptionFailsWithInvalidIndex() {
-
+        TaskList testList = new TaskList();
+        assertNull(testList.getTask(-1));
     }
 
     @Test
     public void gettingTaskItemDescriptionSucceedsWithValidIndex() {
-
+        TaskList testList = new TaskList();
+        assertNull(testList.getTask(0));
     }
 
     @Test
     public void gettingTaskItemDueDateFailsWithInvalidIndex() {
-
+        TaskList testList = new TaskList();
+        assertNull(testList.getTask(-1));
     }
 
     @Test
     public void gettingTaskItemDueDateSucceedsWithValidIndex() {
-
+        TaskList testList = new TaskList();
+        assertNull(testList.getTask(0));
     }
 
     @Test
     public void gettingTaskItemTitleFailsWithInvalidIndex() {
-
+        TaskList testList = new TaskList();
+        assertNull(testList.getTask(-1));
     }
 
     @Test
     public void gettingTaskItemTitleSucceedsWithValidIndex() {
-
+        TaskList testList = new TaskList();
+        assertNull(testList.getTask(0));
     }
 
     @Test
