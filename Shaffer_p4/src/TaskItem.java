@@ -23,40 +23,44 @@ public class TaskItem implements Serializable {
         formatChecker.setLenient(false);
     }
 
-    public String getTitle(){
+    public String getTitle() {
         return title;
     }
 
-    public String getDescription(){
+    public String getDescription() {
         return description;
     }
 
-    public String getDueDate(){
+    public String getDueDate() {
         return dueDate;
     }
 
-    public boolean isComplete(){
+    public boolean isComplete() {
         return complete;
     }
 
-    public boolean setTitle(String newTitle){
-        if(newTitle.length() > 0){
+    public boolean setTitle(String newTitle) {
+        if (newTitle.length() < 0){
+            return false;
+        } else {
             title = newTitle;
             return true;
         }
-        return false;
+
+    }
+
+    public void setDescription(String newDescription) {
+        description = newDescription;
     }
 
     public boolean setDueDate(String newDueDate){
-        if(validDate(newDueDate)) {
+        if(!validDate(newDueDate)) {
+            return false;
+        } else {
             dueDate = newDueDate;
             return true;
         }
-        return false;
-    }
 
-    public void setDescription(String newDescription){
-        description = newDescription;
     }
 
     public void setComplete(boolean newValue){
@@ -64,22 +68,26 @@ public class TaskItem implements Serializable {
     }
 
     @Override
-    public String toString(){
-        return String.format("%s - [%s] %s: %s", complete ? "COMPLETE" : "INCOMPLETE", dueDate, title, description);
-    }
-
-    @Override
-    public boolean equals(Object o){
-        if(!(o instanceof TaskItem)) return false;
-        TaskItem other = (TaskItem) o;
+    public boolean equals(Object objectArg){
+        if(!(objectArg instanceof TaskItem)) return false;
+        TaskItem other = (TaskItem) objectArg;
 
         return other.getTitle().equalsIgnoreCase(title)
                 && other.getDescription().equalsIgnoreCase(description)
                 && other.getDueDate().equalsIgnoreCase(dueDate);
     }
 
+    @Override
+    public String toString(){
+        return String.format("%s, [%s] %s: %s", complete ? "complete" : "incomplete", dueDate, title, description);
+    }
+
     private boolean validTitle(){
         return title.length() > 0;
+    }
+
+    public boolean validTaskItem() {
+        return validTitle() && validDate(dueDate);
     }
 
     public boolean validDate(String dateStr) {
@@ -94,9 +102,4 @@ public class TaskItem implements Serializable {
         }
         return true;
     }
-
-    public boolean validTaskItem() {
-        return validTitle() && validDate(dueDate);
-    }
-
 }

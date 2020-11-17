@@ -14,13 +14,16 @@ public class TaskList implements Serializable {
         loadList(loadFile);
     }
 
-    public boolean hasDefaultSaveLocation(){
-        return fromFile != null;
+    public boolean outOfBounds(int index) {
+        return index < 0 || index >= tasks.size();
     }
 
-    public String getDefaultSavePath(){
-        if(!hasDefaultSaveLocation()) return "";
-        return saveDir + fromFile;
+    public boolean successfullyLoaded() {
+        return tasks.size() > 0;
+    }
+
+    public boolean hasDefaultSaveLocation(){
+        return fromFile != null;
     }
 
 
@@ -31,7 +34,7 @@ public class TaskList implements Serializable {
         if (!directory.exists()){
             boolean dirSetupSuccess = directory.mkdir();
             if(!dirSetupSuccess) {
-                System.out.println("Failed to create SaveFiles directory. Task list was not saved.");
+                System.out.println("ERROR: failed to create SaveFiles directory. list not saved.");
                 return false;
             }
         }
@@ -43,30 +46,28 @@ public class TaskList implements Serializable {
             output.writeObject(this);
             output.close();
             fileOut.close();
-            System.out.println("Successfully saved to " + saveDir + fileName);
+            System.out.println("SUCCESS: saved to " + saveDir + fileName);
             fromFile = fileName;
         } catch (IOException i) {
-            System.out.println("Failed to save this task list.");
+            System.out.println("ERROR: failed to save this task list.");
             return false;
         }
 
         return true;
     }
 
-    public boolean saveList(){
-        if(fromFile == null){
-            System.out.println("Tried to save file to default location, but no default location is specified for this list!\n"
-                    + "Make sure to provide a file name while asking the program to save this list.");
+    public boolean saveList() {
+        if (fromFile == null) {
+            System.out.println("ERROR: please check the filename and try again.");
             return false;
         }
         return saveList(fromFile);
     }
 
-    public boolean loadList(String fileName){
-        if(!fileName.toLowerCase().contains(".txt"))
-            fileName += ".txt";
-
+    public boolean loadList(String fileName) {
         TaskList prototypeList;
+        if (!fileName.toLowerCase().contains(".txt"))
+            fileName += ".txt";
         try {
             FileInputStream fileIn = new FileInputStream(saveDir + fileName);
             ObjectInputStream in = new ObjectInputStream(fileIn);
@@ -95,13 +96,9 @@ public class TaskList implements Serializable {
         return true;
     }
 
-    public boolean successfullyLoaded(){
-        return tasks.size() > 0;
-    }
-
     public String viewSubset(boolean complete){
         StringBuilder builder = new StringBuilder();
-        builder.append(complete ? "Completed Tasks" : "Incomplete Tasks").append("\n------------------------\n");
+        builder.append(complete ? "Completed Tasks" : "Incomplete Tasks").append("\n----------------\n");
         int indexCounter = 0;
 
         for(TaskItem item : tasks){
@@ -115,24 +112,14 @@ public class TaskList implements Serializable {
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("All Tasks").append("\n------------------------\n");
+        builder.append("Current Tasks").append("\n-------------\n");
         int indexCounter = 0;
-
-        for(TaskItem item : tasks)
+        for (TaskItem item : tasks) {
             builder.append(String.format("%d) %s\n", indexCounter++, item.toString()));
-
-        return builder.toString().trim();
-    }
-
-    public boolean addTask(TaskItem newTask){
-        for(TaskItem item : tasks){
-            if(item.getTitle().equalsIgnoreCase(newTask.getTitle()))
-                return false;
         }
-        tasks.add(newTask);
-        return true;
+        return builder.toString().trim();
     }
 
     public TaskItem getTask(int index){
@@ -141,66 +128,63 @@ public class TaskList implements Serializable {
         return tasks.get(index);
     }
 
-    public TaskItem getTask(String title){
-        for(TaskItem item : tasks){
-            if(item.getTitle().equalsIgnoreCase(title)){
+    public TaskItem getTask(String titleArg){
+        for (TaskItem item : tasks) {
+            if (item.getTitle().equalsIgnoreCase(titleArg)) {
                 return item;
             }
         }
         return null;
     }
 
-    public boolean removeTask(int index){
-        if(outOfBounds(index))
+    public boolean addTask(TaskItem newTask) {
+        for (TaskItem item : tasks) {
+            if(item.getTitle().equalsIgnoreCase(newTask.getTitle())) {
+                return false;
+            }
+        }
+        tasks.add(newTask);
+        return true;
+    }
+
+    public boolean removeTask(int index) {
+        if (outOfBounds(index)) {
             return false;
+        }
         tasks.remove(index);
         return true;
     }
 
-    public boolean removeTask(TaskItem item){
+    public boolean removeTask(TaskItem item) {
         return tasks.remove(item);
     }
 
-    public boolean replaceTask(int oldTaskIndex, TaskItem newTask){
-        if(outOfBounds(oldTaskIndex)) {
-            System.out.println("The provided index is not in the list, nothing changed!");
+    public boolean setCompletion(int index, boolean complete) {
+        if (outOfBounds(index)) {
             return false;
-        } else {
-            removeTask(oldTaskIndex);
-            tasks.add(oldTaskIndex, newTask);
-            return true;
         }
-    }
-
-    public boolean setCompletion(int index, boolean complete){
-        if(outOfBounds(index))
-            return false;
         tasks.get(index).setComplete(complete);
         return true;
     }
 
-    public int size(){
+    public int size() {
         return tasks.size();
     }
 
     public int sizeByStatus(boolean complete){
         int counter = 0;
-        for(TaskItem item : tasks)
+        for (TaskItem item : tasks)
             counter += item.isComplete() == complete ? 1 : 0;
         return counter;
     }
 
-    public int indexOf(TaskItem item){
-        for(int i = 0; i < tasks.size(); i++){
+    public int indexOf(TaskItem item) {
+        for (int i = 0; i < tasks.size(); i++) {
             TaskItem current = tasks.get(i);
-            if(current.equals(item))
+            if (current.equals(item)) {
                 return i;
+            }
         }
         return -1;
     }
-
-    public boolean outOfBounds(int index){
-        return index < 0 || index >= tasks.size();
-    }
-
 }

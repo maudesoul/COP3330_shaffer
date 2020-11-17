@@ -32,33 +32,8 @@ public class App {
         }
     }
 
-    public static TaskList loadList(){
-        System.out.print("\nSaved lists by save file name:\n");
-        File saveDir = new File("SaveFiles/");
-        String[] savedFileNames = saveDir.list();
-        if(savedFileNames != null) {
-            for (String name : savedFileNames)
-                System.out.println(name);
-        } else {
-            System.out.print("No lists saved yet! You must start and save a list before you can load an existing one.\n");
-            return null;
-        }
-        System.out.print("\nEnter the name of the desired save file, or CANCEL to go back to the main menu.\n");
-        TaskList newLoad = new TaskList();
-
-        while(true){
-            String fileName = scan.nextLine();
-            if(fileName.equalsIgnoreCase("CANCEL"))
-                return null;
-            else if(newLoad.loadList(fileName))
-                return newLoad;
-            else
-                System.out.print("Enter an another file name:\n");
-        }
-    }
-
     public static void listOperationMenu(TaskList taskList) {
-        while(true) {
+        while (true) {
             System.out.print("\nList Operation Menu\n");
             System.out.print("-------------------\n\n");
             System.out.println("1) view the list");
@@ -87,21 +62,45 @@ public class App {
         }
     }
 
+    public static TaskList loadList() {
+        File saveDir = new File("SaveFiles/");
+        String[] savedFileNames = saveDir.list();
+        if (savedFileNames != null) {
+            System.out.print("\nenter the filename to load (or 'cancel' to quit): ");
+        } else {
+            System.out.print("ERROR: no saved lists yet. go make some first.\n");
+            return null;
+        }
+        TaskList newLoad = new TaskList();
+        while (true) {
+            String fileName = scan.nextLine();
+            if(fileName.equalsIgnoreCase("cancel")) {
+                return null;
+            }
+            else if(newLoad.loadList(fileName)) {
+                return newLoad;
+            }
+            else {
+                System.out.print("\nplease enter another filename (or 'cancel' to quit): ");
+            }
+        }
+    }
+
     public static TaskItem getTaskItemIdentifiersFromInput(String action) {
-        System.out.printf("\ntask title:\n", action.equals("edit") ? "New " : "");
+        System.out.printf("\ntask title: ", action.equals("edit") ? "New " : "");
         String title = scan.nextLine();
         while(title.length() < 1) {
             System.out.print("WARNING: title must be at least 1 character long; task not created. please type in new title\n");
             title = scan.nextLine();
         }
 
-        System.out.printf("\ntask description:\n", action.equals("edit") ? "New " : "");
+        System.out.printf("\ntask description: ", action.equals("edit") ? "New " : "");
         String description = scan.nextLine();
 
-        System.out.printf("\ntask due date (yyyy-mm-dd):\n", action.equals("edit") ? "New " : "");
+        System.out.printf("\ntask due date (yyyy-mm-dd): ", action.equals("edit") ? "New " : "");
         String date = scan.nextLine();
         TaskItem item = new TaskItem(title, description, date);
-        while(!item.validTaskItem()){
+        while (!item.validTaskItem()) {
             System.out.print("\nWARNING: invalid due date; task not created. please enter new date (yyyy-mm-dd)\n");
             date = scan.nextLine();
             item.setDueDate(date);
@@ -109,31 +108,25 @@ public class App {
         return item;
     }
 
-    public static TaskItem getTaskItemFromInput(TaskList taskList){
+    public static TaskItem getTaskItemFromInput(TaskList taskList) {
         String input = scan.nextLine();
         try {
             int taskNumber = Integer.parseInt(input);
             TaskItem item = taskList.getTask(taskNumber);
-            if(item != null) {
-                System.out.printf("Selected task '%s' from index %d\n", item.toString(), taskNumber);
-                return item;
-            } else {
-                System.out.printf("Couldn't find a task at index %d, trying by title '%s'\n", taskNumber, input);
+            if (item == null) {
+                System.out.printf("WARNING: cannot find by index, trying by title '%s'\n", input);
                 item = taskList.getTask(input);
-                if(item == null)
-                    System.out.printf("Couldn't find a task with title '%s'\n", input);
-                else
-                    System.out.printf("Selected task '%s'\n", item.toString());
-                return item;
+                if (item == null) {
+                    System.out.print("ERROR: no task with that title exists.");
+                }
             }
-        } catch(NumberFormatException error){
-            System.out.printf("Searching for task with title '%s'\n", input);
+            return item;
+        } catch (NumberFormatException error) {
+            System.out.print("searching for task with that title...");
             TaskItem item = taskList.getTask(input);
-            if(item == null)
-                System.out.printf("Couldn't find a task with title '%s'\n", input);
-            else
-                System.out.printf("Selected task '%s'\n", item.toString());
-
+            if (item == null) {
+                System.out.print("ERROR: no task with that title exists.");
+            }
             return item;
         }
     }
@@ -150,7 +143,7 @@ public class App {
 
     public static void editItem(TaskList taskList) {
         System.out.print("\n" + taskList.toString() + "\n");
-        System.out.print("\nwhich task will you edit?\n");
+        System.out.print("\ntask to be edited: ");
         TaskItem oldTask = getTaskItemFromInput(taskList);
         if (oldTask == null) {
             System.out.print("\nWARNING: no task was found by that name or index. no changes made to list.");
@@ -161,12 +154,11 @@ public class App {
             oldTask.setDueDate(editedTask.getDueDate());
             System.out.print("SUCCESS: edited task.");
         }
-
     }
 
     public static void removeItem(TaskList taskList) {
         System.out.print("\n" + taskList.toString() + "\n");
-        System.out.print("\nwhich task will you remove?\n");
+        System.out.print("\ntask to be removed: ");
         TaskItem task = getTaskItemFromInput(taskList);
         if (task == null) {
             System.out.print("\nWARNING: no task found by that name or index. no changes made to list.");
@@ -187,7 +179,7 @@ public class App {
             System.out.println("WARNING: no incomplete tasks on this list.");
             return;
         }
-        System.out.print("\nwhich task will you mark as completed?\n");
+        System.out.print("\nindex or title of completed task: ");
         TaskItem task = getTaskItemFromInput(taskList);
         if (task == null) {
             System.out.print("\nWARNING: no task found by that name or index. no changes made to list.");
@@ -208,7 +200,7 @@ public class App {
             System.out.println("WARNING: no complete tasks on this list.");
             return;
         }
-        System.out.print("\nwhich task will you mark as completed?\n");
+        System.out.print("\nindex or title of incomplete task: ");
         TaskItem task = getTaskItemFromInput(taskList);
         if (task == null) {
             System.out.print("\nWARNING: no task found by that name or index. no changes made to list.");
@@ -222,24 +214,7 @@ public class App {
         }
     }
 
-    public static void saveList(TaskList taskList) {
-        boolean hasDefault = taskList.hasDefaultSaveLocation();
-        if(hasDefault){
-            System.out.print("\nthis list has a default save location. save to this location? (Y/N)\n");
-            String yn = scan.nextLine();
-            if(yn.equalsIgnoreCase("y") || yn.equalsIgnoreCase("yes")) {
-                taskList.saveList();
-            } else if(yn.equalsIgnoreCase("n") || yn.equalsIgnoreCase("no")) {
-                saveToNewFile(taskList);
-            } else {
-                System.out.print("\nERROR: invalid choice. no changes made.\n");
-            }
-        } else {
-            saveToNewFile(taskList);
-        }
-    }
-
-    public static void saveToNewFile(TaskList taskList) {
+    public static void saveToFile(TaskList taskList) {
         System.out.print("\nenter the filename to save as: ");
         String name = scan.nextLine();
         if (!name.toLowerCase().contains(".txt"))
@@ -250,6 +225,23 @@ public class App {
             taskList.saveList(name);
         } else {
             taskList.saveList(name);
+        }
+    }
+
+    public static void saveList(TaskList taskList) {
+        boolean hasDefault = taskList.hasDefaultSaveLocation();
+        if (hasDefault) {
+            System.out.print("\nthere is a default save location for this file. save to this location? (Y/N)\n");
+            String yn = scan.nextLine();
+            if (yn.equalsIgnoreCase("y") || yn.equalsIgnoreCase("yes")) {
+                taskList.saveList();
+            } else if (yn.equalsIgnoreCase("n") || yn.equalsIgnoreCase("no")) {
+                saveToFile(taskList);
+            } else {
+                System.out.print("\nERROR: invalid choice. no changes made.\n");
+            }
+        } else {
+            saveToFile(taskList);
         }
     }
 }
