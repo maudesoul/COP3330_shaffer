@@ -11,20 +11,18 @@ public class TaskItem implements Serializable {
     private final String DATE_FORMAT = "yyyy-MM-dd";
     private final SimpleDateFormat formatChecker = new SimpleDateFormat(DATE_FORMAT, Locale.US);
 
-    private String title; //1 or more characters
-    private String description; //0 or more characters
-    private String dueDate; //yyyy-MM-dd as specified by DATE_FORMAT
+    private String title;
+    private String description;
+    private String dueDate;
     private boolean complete;
 
     public TaskItem(String title, String description, String dueDate){
         this.title = title;
         this.description = description;
         this.dueDate = dueDate;
-        //Setting a year/month/day that doesn't exist fails parsing instead of just adding the extra to the closest valid date
         formatChecker.setLenient(false);
     }
 
-    //--------------------Getters--------------------------
     public String getTitle(){
         return title;
     }
@@ -40,8 +38,6 @@ public class TaskItem implements Serializable {
     public boolean isComplete(){
         return complete;
     }
-
-    //--------------------Setters--------------------------
 
     public boolean setTitle(String newTitle){
         if(newTitle.length() > 0){
@@ -67,8 +63,6 @@ public class TaskItem implements Serializable {
         complete = newValue;
     }
 
-    //--------------------Utility--------------------------
-
     @Override
     public String toString(){
         return String.format("%s - [%s] %s: %s", complete ? "COMPLETE" : "INCOMPLETE", dueDate, title, description);
@@ -89,23 +83,19 @@ public class TaskItem implements Serializable {
     }
 
     public boolean validDate(String dateStr) {
-        //Using new Date() silently incorporates H/M/S, which makes a comparison to same day in the YYYY-MM-DD format invalid for equal days of the year
-        //This is why I'm sending new Date() through a loop, which cuts off the extra data and allows for a fair comparison
-
         try {
             Date given = formatChecker.parse(dateStr);
             Date current = formatChecker.parse(formatChecker.format(new Date()));
 
-            if(given.compareTo(current) < 0) //If the date given has already passed, return invalid
+            if(given.compareTo(current) < 0)
                 return false;
         } catch (ParseException e) {
-            return false; //Not valid string provided, return invalid
+            return false;
         }
-
-        return true; //Return valid
+        return true;
     }
 
-    public boolean validTaskItem(){
+    public boolean validTaskItem() {
         return validTitle() && validDate(dueDate);
     }
 
