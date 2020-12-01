@@ -26,7 +26,9 @@ public class TaskApp {
                         listOperationMenu(retrieved);
                     }
                 }
-                case "3" -> System.exit(0);
+                case "3" -> {
+                    return;
+                }
                 default -> System.out.println("\nNot a valid selection. Please try again.\n");
             }
         }
