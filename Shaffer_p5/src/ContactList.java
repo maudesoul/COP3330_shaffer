@@ -130,7 +130,7 @@ public class ContactList implements Serializable {
 
     public ContactItem getContact(String titleArg){
         for (ContactItem item : contacts) {
-            if (item.getTitle().equalsIgnoreCase(titleArg)) {
+            if (item.getFirstName().equalsIgnoreCase(titleArg)) {
                 return item;
             }
         }
@@ -139,7 +139,7 @@ public class ContactList implements Serializable {
 
     public boolean addContact(ContactItem newContact) {
         for (ContactItem item : contacts) {
-            if(item.getTitle().equalsIgnoreCase(newContact.getTitle())) {
+            if(item.getFirstName().equalsIgnoreCase(newContact.getFirstName())) {
                 return false;
             }
         }

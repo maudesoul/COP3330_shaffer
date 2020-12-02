@@ -19,7 +19,10 @@ public class ContactApp {
             String choice = scan.nextLine();
 
             switch(choice) {
-                case "1" -> listOperationMenu(new ContactList());
+                case "1" -> {
+                    System.out.println("new contact list has been created\n");
+                    listOperationMenu(new ContactList());
+                }
                 case "2" -> {
                     ContactList retrieved = loadList();
                     if (retrieved != null) {
@@ -42,10 +45,8 @@ public class ContactApp {
             System.out.println("2) add an item");
             System.out.println("3) edit an item");
             System.out.println("4) remove an item");
-            System.out.println("5) mark an item as completed");
-            System.out.println("6) unmark an item as completed");
-            System.out.println("7) save the current list");
-            System.out.println("8) quit to the main menu\n");
+            System.out.println("5) save the current list");
+            System.out.println("6) quit to the main menu\n");
 
             String choice = scan.nextLine();
             switch(choice) {
@@ -53,10 +54,8 @@ public class ContactApp {
                 case "2" -> addItem(contactList);
                 case "3" -> editItem(contactList);
                 case "4" -> removeItem(contactList);
-                case "5" -> markCompleted(contactList);
-                case "6" -> markIncompleted(contactList);
-                case "7" -> saveList(contactList);
-                case "8" -> {
+                case "5" -> saveList(contactList);
+                case "6" -> {
                     return;
                 }
                 default -> System.out.println("\nNot a valid selection. Please try again.\n");
@@ -89,23 +88,22 @@ public class ContactApp {
     }
 
     public static ContactItem getContactItemIdentifiersFromInput(String action) {
-        System.out.printf("\ncontact title: ", action.equals("edit") ? "New " : "");
-        String title = scan.nextLine();
-        while(title.length() < 1) {
-            System.out.print("WARNING: title must be at least 1 character long; contact not created. please type in new title\n");
-            title = scan.nextLine();
-        }
+        System.out.printf("\nfirst name: ", action.equals("edit") ? "New " : "");
+        String firstName = scan.nextLine();
+        // Can have blank fields, but fails if ALL fields are blank
+        System.out.printf("\nlast name: ", action.equals("edit") ? "New " : "");
+        String lastName = scan.nextLine();
 
-        System.out.printf("\ncontact description: ", action.equals("edit") ? "New " : "");
-        String description = scan.nextLine();
+        System.out.printf("\nphone number (xxx-xxx-xxxx): ", action.equals("edit") ? "New " : "");
+        String phoneNumber = scan.nextLine();
 
-        System.out.printf("\ncontact due date (yyyy-mm-dd): ", action.equals("edit") ? "New " : "");
-        String date = scan.nextLine();
-        ContactItem item = new ContactItem(title, description, date);
-        while (!item.validContactItem()) {
-            System.out.print("\nWARNING: invalid due date; contact not created. please enter new date (yyyy-mm-dd)\n");
-            date = scan.nextLine();
-            item.setDueDate(date);
+        System.out.printf("\nemail address (x@y.z): ", action.equals("edit") ? "New " : "");
+        String emailAddress = scan.nextLine();
+
+        ContactItem item = new ContactItem(firstName, lastName, phoneNumber, emailAddress);
+        while (item.validContactItem()) {
+            System.out.print("\nWARNING: all fields left blank. Please try again\n");
+            break;
         }
         return item;
     }
@@ -135,12 +133,8 @@ public class ContactApp {
 
     public static void addItem(ContactList contactList) {
         ContactItem newItem = getContactItemIdentifiersFromInput("add");
-        if (contactList.getContact(newItem.getTitle()) != null) {
-            System.out.println("\nWARNING: a contact with that title already exists. no changes made\n");
-        } else {
-            contactList.addContact(newItem);
-            System.out.println("SUCCESS: added contact to list.");
-        }
+        contactList.addContact(newItem);
+        System.out.println("SUCCESS: added contact to list.");
     }
 
     public static void editItem(ContactList contactList) {
@@ -151,9 +145,10 @@ public class ContactApp {
             System.out.print("\nWARNING: no contact was found by that name or index. no changes made to list.");
         } else {
             ContactItem editedContact = getContactItemIdentifiersFromInput("edit");
-            oldContact.setTitle(editedContact.getTitle());
-            oldContact.setDescription(editedContact.getDescription());
-            oldContact.setDueDate(editedContact.getDueDate());
+            oldContact.setFirstName(editedContact.getFirstName());
+            oldContact.setLastName(editedContact.getLastName());
+            oldContact.setPhoneNumber(editedContact.getPhoneNumber());
+            oldContact.setEmailAddress(editedContact.getEmailAddress());
             System.out.print("SUCCESS: edited contact.");
         }
     }
@@ -170,48 +165,6 @@ public class ContactApp {
                 System.out.print("\nSUCCESS: removed contact from list.\n");
             } else {
                 System.out.print("\nERROR: cannot remove contact from list.\n");
-            }
-        }
-    }
-
-    public static void markCompleted(ContactList contactList) {
-        System.out.print("\n" + contactList.viewSubset(ContactItem.INCOMPLETE) + "\n");
-
-        if (contactList.sizeByStatus(ContactItem.INCOMPLETE) == 0) {
-            System.out.println("WARNING: no incomplete contacts on this list.");
-            return;
-        }
-        System.out.print("\nindex or title of completed contact: ");
-        ContactItem contact = getContactItemFromInput(contactList);
-        if (contact == null) {
-            System.out.print("\nWARNING: no contact found by that name or index. no changes made to list.");
-        } else {
-            boolean success = contactList.setCompletion(contactList.indexOf(contact), ContactItem.COMPLETE);
-            if (success) {
-                System.out.print("\nSUCCESS: marked contact as complete.\n");
-            } else {
-                System.out.print("\nERROR: cannot mark contact as complete.\n");
-            }
-        }
-    }
-
-    public static void markIncompleted(ContactList contactList) {
-        System.out.print("\n" + contactList.viewSubset(ContactItem.COMPLETE) + "\n");
-
-        if (contactList.sizeByStatus(ContactItem.COMPLETE) == 0) {
-            System.out.println("WARNING: no complete contacts on this list.");
-            return;
-        }
-        System.out.print("\nindex or title of incomplete contact: ");
-        ContactItem contact = getContactItemFromInput(contactList);
-        if (contact == null) {
-            System.out.print("\nWARNING: no contact found by that name or index. no changes made to list.");
-        } else {
-            boolean success = contactList.setCompletion(contactList.indexOf(contact), ContactItem.INCOMPLETE);
-            if (success) {
-                System.out.print("\nSUCCESS: marked contact as incomplete.\n");
-            } else {
-                System.out.print("\nERROR: cannot mark contact as incomplete.\n");
             }
         }
     }

@@ -5,101 +5,80 @@ import java.util.Date;
 import java.util.Locale;
 
 public class ContactItem implements Serializable {
-    public static final boolean COMPLETE = true;
-    public static final boolean INCOMPLETE = false;
-
-    private final String DATE_FORMAT = "yyyy-MM-dd";
-    private final SimpleDateFormat formatChecker = new SimpleDateFormat(DATE_FORMAT, Locale.US);
-
-    private String title;
-    private String description;
-    private String dueDate;
+    private String firstName;
+    private String lastName;
+    private String phoneNumber;
+    private String emailAddress;
     private boolean complete;
 
-    public ContactItem(String title, String description, String dueDate){
-        this.title = title;
-        this.description = description;
-        this.dueDate = dueDate;
-        formatChecker.setLenient(false);
+    public ContactItem(String firstName, String lastName, String phoneNumber, String emailAddress){
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phoneNumber = phoneNumber;
+        this.emailAddress = emailAddress;
     }
 
-    public String getTitle() {
-        return title;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public String getDescription() {
-        return description;
+    public String getLastName() {
+        return lastName;
     }
 
-    public String getDueDate() {
-        return dueDate;
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public String getEmailAddress() {
+        return emailAddress;
     }
 
     public boolean isComplete() {
         return complete;
     }
 
-    public boolean setTitle(String newTitle) {
-        if (newTitle.length() < 0){
-            return false;
-        } else {
-            title = newTitle;
-            return true;
-        }
-
+    public void setFirstName(String newFirstName) {
+        firstName = newFirstName;
     }
 
-    public void setDescription(String newDescription) {
-        description = newDescription;
+    public void setLastName(String newLastName) {
+        lastName = newLastName;
     }
 
-    public boolean setDueDate(String newDueDate){
-        if(!validDate(newDueDate)) {
-            return false;
-        } else {
-            dueDate = newDueDate;
-            return true;
-        }
-
+    public void setPhoneNumber(String newPhoneNumber) {
+        phoneNumber = newPhoneNumber;
     }
 
-    public void setComplete(boolean newValue){
+    public void setEmailAddress(String newEmailAddress) {
+        emailAddress = newEmailAddress;
+    }
+
+    public void setComplete(boolean newValue) {
         complete = newValue;
     }
 
     @Override
-    public boolean equals(Object objectArg){
+    public boolean equals(Object objectArg) {
         if(!(objectArg instanceof ContactItem)) return false;
         ContactItem other = (ContactItem) objectArg;
 
-        return other.getTitle().equalsIgnoreCase(title)
-                && other.getDescription().equalsIgnoreCase(description)
-                && other.getDueDate().equalsIgnoreCase(dueDate);
+        return other.getFirstName().equalsIgnoreCase(firstName)
+                && other.getLastName().equalsIgnoreCase(lastName)
+                && other.getPhoneNumber().equalsIgnoreCase(phoneNumber)
+                && other.getEmailAddress().equalsIgnoreCase(emailAddress);
     }
 
     @Override
-    public String toString(){
-        return String.format("%s, [%s] %s: %s", complete ? "complete" : "incomplete", dueDate, title, description);
-    }
-
-    private boolean validTitle(){
-        return title.length() > 0;
+    public String toString() {
+        return String.format("Name: %s %s\nPhone: %s\nEmail: %s\n", firstName, lastName, phoneNumber, emailAddress);
     }
 
     public boolean validContactItem() {
-        return validTitle() && validDate(dueDate);
-    }
-
-    public boolean validDate(String dateStr) {
-        try {
-            Date given = formatChecker.parse(dateStr);
-            Date current = formatChecker.parse(formatChecker.format(new Date()));
-
-            if(given.compareTo(current) < 0)
-                return false;
-        } catch (ParseException e) {
+        if (getFirstName().isBlank() && getLastName().isBlank() && getPhoneNumber().isBlank() && getEmailAddress().isBlank()) {
             return false;
+        } else {
+            return true;
         }
-        return true;
     }
 }
