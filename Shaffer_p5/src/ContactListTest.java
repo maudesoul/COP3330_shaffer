@@ -31,9 +31,11 @@ public class ContactListTest {
     public void editingItemsFailsWithInvalidIndex() {
         ContactList list = new ContactList();
         ContactItem contact = new ContactItem("John", "Doe","123-456-7890","johndoe@gmail.com");
+        ContactItem newContact = new ContactItem("Her","Name","987-654-3210","noname@gmail.com");
         list.addContact(contact);
         try{
-            list.getContact("Her","Name","987-654-3210","noname@gmail.com");
+            list.getContact(0);
+            list.addContact(newContact);
             assertTrue(false);
         } catch(ArrayIndexOutOfBoundsException e) {
             assertTrue(true);
@@ -44,8 +46,10 @@ public class ContactListTest {
     public void editingSucceedsWithBlankFirstName() {
         ContactList list = new ContactList();
         ContactItem contact = new ContactItem("John", "Doe","123-456-7890","johndoe@gmail.com");
+        ContactItem newContact = new ContactItem("", "Greg", "123-123-1234","greg@gmail.com");
         list.addContact(contact);
-        list.getContact("", "Greg", "123-123-1234","greg@gmail.com");
+        list.getContact(0);
+        list.addContact(newContact);
         assertEquals("Greg", contact.getLastName());
     }
 
@@ -53,8 +57,10 @@ public class ContactListTest {
     public void editingSucceedsWithBlankLastName() {
         ContactList list = new ContactList();
         ContactItem contact = new ContactItem("John", "Doe","123-456-7890","johndoe@gmail.com");
+        ContactItem newContact = new ContactItem("Frank", "", "123-123-1234","frank@gmail.com");
         list.addContact(contact);
-        list.getContact("Frank", "", "123-123-1234","frank@gmail.com");
+        list.getContact(0);
+        list.addContact(newContact);
         assertEquals("Frank", contact.getFirstName());
     }
 
@@ -62,8 +68,10 @@ public class ContactListTest {
     public void editingSucceedsWithBlankPhone() {
         ContactList list = new ContactList();
         ContactItem contact = new ContactItem("John", "Doe","123-456-7890","johndoe@gmail.com");
+        ContactItem newContact = new ContactItem("Frank", "Synatra", "","frankie@gmail.com");
         list.addContact(contact);
-        list.getContact("Frank", "Synatra", "","frankie@gmail.com");
+        list.getContact(0);
+        list.addContact(newContact);
         assertEquals("Synatra", contact.getLastName());
     }
 
@@ -71,8 +79,10 @@ public class ContactListTest {
     public void editingSucceedsWithNonBlankValues() {
         ContactList list = new ContactList();
         ContactItem contact = new ContactItem("John", "Doe","123-456-7890","johndoe@gmail.com");
+        ContactItem newContact = new ContactItem("Frank", "Synatra", "123-123-1234","frankie@gmail.com");
         list.addContact(contact);
-        list.getContact("Frank", "Synatra", "123-123-1234","frankie@gmail.com");
+        list.getContact(0);
+        list.addContact(newContact);
         assertEquals("Frank", contact.getFirstName());
         assertEquals("Synatra", contact.getLastName());
         assertEquals("123-123-1234", contact.getPhoneNumber());
